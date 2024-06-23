@@ -5,6 +5,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import Stripe from "stripe";
+import { Vonage } from "@vonage/server-sdk";
+import { Complaint } from "../models/complaints.model.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -297,6 +299,78 @@ const makePayment = async (req, res) => {
   }
 };
 
+// register food complaint
+const registerFoodComplaint = asyncHandler(async (req, res) => {
+  const {
+    locality,
+    foodType,
+    latitude,
+    longitude,
+    foodDescription,
+    date,
+    mobileNo,
+    selectedImage,
+    mapAPI,
+  } = req.body;
+  const vonage = new Vonage({
+    apiKey: process.env.VONAGE_API_KEY,
+    apiSecret: process.env.VONAGE_SECRET_KEY,
+  });
+  const from = "Meal Mates Community";
+  const to = `${mobileNo}`;
+  const text = "Your food complaint is registered successfully!!";
+  await vonage.sms
+    .send({ to, from, text })
+    .then((resp) => {
+      console.log("Message sent successfully");
+      console.log(resp);
+    })
+    .catch((err) => {
+      console.log("There was an error sending the messages.");
+      console.error(err);
+    });
+
+  const newComplaint = new Complaint({
+    locality,
+    foodType,
+    latitude,
+    longitude,
+    foodDescription,
+    date,
+    mobileNo,
+    selectedImage,
+    mapAPI,
+  });
+  console.log("Request body: ", req.body);
+  const complaintData = await newComplaint.save();
+  console.log("Complaint Data: ", complaintData);
+  return res.status(200).json({
+    success: true,
+    msg: "Complaint Registered successfully!",
+    complaintData,
+  });
+});
+
+// getting all food complaints
+const getFoodComplaints = asyncHandler(async (req, res) => {
+  try {
+    const complaintsList = await Complaint.find();
+    console.log("Here are the list of registered complaints: ", complaintsList);
+    return res.status(200).json({
+      success: true,
+      msg: "List of registered complaints by the residents",
+      complaintsList,
+    });
+  } catch (error) {
+    console.error("Error fetching complaints: ", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Error fetching complaints",
+      error: error.message,
+    });
+  }
+});
+
 export {
   changeCurrentPassword,
   getPaymentDetails,
@@ -306,4 +380,6 @@ export {
   refreshAccessToken,
   registerUser,
   makePayment,
+  registerFoodComplaint,
+  getFoodComplaints,
 };
