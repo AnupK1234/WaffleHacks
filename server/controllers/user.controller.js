@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Payment } from "../db/payment.model.js";
+import { Payment } from "../models/payment.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -268,7 +268,7 @@ const makePayment = async (req, res) => {
             product_data: {
               name: "Custom Payment",
             },
-            unit_amount: amount,
+            unit_amount: amount * 100,
           },
           quantity: 1,
         },
