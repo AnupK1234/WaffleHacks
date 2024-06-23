@@ -7,6 +7,8 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Contact from "./pages/Contact";
 import { AuthProvider } from "./context/AuthContext";
+import Success from "./components/Success";
+import Cancel from "./components/Cancel";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/contactus" element={<Contact />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
         </Routes>
       </AuthProvider>
     </>
