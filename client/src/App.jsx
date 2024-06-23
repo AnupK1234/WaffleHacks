@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import { AuthProvider } from "./context/AuthContext";
 import Success from "./components/Success";
 import Cancel from "./components/Cancel";
+import AdminDashboard from "./pages/AdminDashboard";
 import RegisterFoodWastage from './pages/RegisterFoodWastage'
 import ListOfFoodComplaints from './pages/ListOfFoodComplaints'
 import Community_Forum from "./pages/CommunityForum";
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/donate" element={<Donate/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/admin/dashboard" element={<AdminDashboard/>} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/contactus" element={<Contact />} />

@@ -25,6 +25,7 @@ const SignUp = () => {
         role: formData.role,
       }
     );
+    
     //console.log(response.data);
     if(response.data.statusCode == 200) navigate("/signin");
   };

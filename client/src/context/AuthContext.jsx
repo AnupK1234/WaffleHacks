@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("user");
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
-    navigate("/signin");
+    navigate("/");
   };
 
   return (

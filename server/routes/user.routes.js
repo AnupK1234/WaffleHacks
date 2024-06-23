@@ -10,12 +10,15 @@ import {
   makePayment,
   registerFoodComplaint,
   getFoodComplaints,
+  getAllUser,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.route("/register").post(registerUser);
+
+router.route("/getAllUser").get(getAllUser);
 
 router.route("/login").post(loginUser);
 
