@@ -6,7 +6,8 @@ const Hero = () => {
           <div className="flex items-center flex-wrap px-2 md:px-0">
             <div className="relative lg:w-6/12 lg:py-24 xl:py-32">
               <h1 className="font-bold text-4xl text-yellow-900 md:text-5xl lg:w-10/12">
-                Your favorite dishes, right at your door
+                Enjoy Your Favorite Meals at No Cost - Let&apos;s End Student
+                Hunger Together!
               </h1>
               <form action="" className="w-full mt-12">
                 <div className="relative flex p-1 rounded-full bg-white border border-yellow-200 shadow-md md:p-2">
@@ -15,12 +16,10 @@ const Hero = () => {
                     name="domain"
                     id="domain"
                   >
-                    <option value="design">FastFood</option>
                     <option value="development">Restaurant</option>
-                    <option value="marketing">Marketing</option>
                   </select>
                   <input
-                    placeholder="Your favorite food"
+                    placeholder="Search Restaurants near you!"
                     className="w-full p-4 rounded-full"
                     type="text"
                   />
@@ -45,10 +44,15 @@ const Hero = () => {
                 </div>
               </form>
               <p className="mt-8 text-gray-700 lg:w-10/12">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum
-                impedit dolore amet aspernatur iure a commodi doloribus veniam
-                hic cumque maxime vitae, velit voluptate ipsum enim non
-                mollitia? Doloremque, illum!
+                Our project is dedicated to ending student food insecurity by
+                providing students with access to nutritious and delicious meals
+                at no cost. We partner with local food vendors and leverage
+                community resources to ensure that every student can enjoy their
+                favorite dishes without the burden of cost. By addressing the
+                critical issue of student hunger, we aim to create a healthier,
+                more focused, and successful student community. Join us in our
+                mission to make sure no student has to study on an empty
+                stomach.
               </p>
             </div>
             <div className="ml-auto -mb-15  lg:w-6/12">
