@@ -7,14 +7,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import Stripe from "stripe";
 import { Vonage } from "@vonage/server-sdk";
 import { Complaint } from "../models/complaints.model.js";
-import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
-
-cloudinary.config({
-  cloud_name: "dmfxvx5vn",
-  api_key: "429888616999743",
-  api_secret: "vY_6H1ltWNDXK-vghY3FrUHffpo",
-});
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
