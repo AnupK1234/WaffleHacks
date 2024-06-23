@@ -29,6 +29,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    role: {
+      type: String,
+      required: true,
+      enum: ["Admin", "Student", "Donor"], // allowed values
+      default: "Student", // default value
+    },
     refreshToken: {
       type: String,
     },
@@ -39,7 +45,7 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  // go ahed only if password is modified
+  // go ahead only if password is modified
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
@@ -57,6 +63,7 @@ userSchema.methods.generateAccessToken = function () {
       email: this.email,
       username: this.username,
       fullname: this.fullname,
+      role: this.role, // include role in the token payload
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

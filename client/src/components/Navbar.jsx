@@ -1,7 +1,10 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const Navbar = () => {
   const navbarRef = useRef(null);
+  const { user, logout } = useContext(AuthContext);
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -36,10 +39,10 @@ const Navbar = () => {
               alt="Flowbite Logo"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap">
-              ABC
+              MealMates
             </span>
           </a>
-          <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          {/* <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button
               type="button"
               className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -55,7 +58,6 @@ const Navbar = () => {
                 alt="user photo"
               />
             </button>
-            {/* Dropdown menu  */}
             <div
               className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
               id="user-dropdown"
@@ -127,6 +129,29 @@ const Navbar = () => {
                 />
               </svg>
             </button>
+          </div> */}
+          <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <img
+                  className="w-8 h-8 rounded-full"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
+                  alt="user photo"
+                />
+                <button
+                  onClick={logout}
+                  className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link to="/signin">
+                <button className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">
+                  Login
+                </button>
+              </Link>
+            )}
           </div>
           <div
             className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
@@ -167,12 +192,12 @@ const Navbar = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/contactus"
                   className="block py-2 px-3 text-[#1D1818] rounded md:bg-transparent md:p-0"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
