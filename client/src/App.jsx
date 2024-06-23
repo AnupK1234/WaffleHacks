@@ -10,12 +10,21 @@ import { AuthProvider } from "./context/AuthContext";
 import Success from "./components/Success";
 import Cancel from "./components/Cancel";
 import AdminDashboard from "./pages/AdminDashboard";
+import RegisterFoodWastage from './pages/RegisterFoodWastage'
+import ListOfFoodComplaints from './pages/ListOfFoodComplaints'
+import Community_Forum from "./pages/CommunityForum";
 
 function App() {
   return (
     <>
       <AuthProvider>
         <Routes>
+          <Route
+            path="/register_complaints"
+            element={<RegisterFoodWastage />}
+          />
+          <Route path="/community_forum" element={<Community_Forum />} />
+          <Route path = "/list_of_complaints" element = {<ListOfFoodComplaints />} />
           <Route path="/" element={<Home />} />
           <Route path="/donate" element={<Donate/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
