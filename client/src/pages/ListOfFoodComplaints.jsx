@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const ListOfFoodComplaints = () => {
     const [details, setDetails] = useState([]);
@@ -21,8 +22,8 @@ const ListOfFoodComplaints = () => {
                         <div key={index} className="p-4">
                             <div className="bg-white p-6 rounded-lg shadow-lg w-full">
                                 <h3 className="text-indigo-500 text-xs font-medium tracking-widest uppercase mb-1">{new Date(res.date).toLocaleString()}</h3>
-                                <h2 className="text-gray-900 title-font text-lg font-medium mb-2">{res.issueDescription}</h2>
-                                <p className="leading-relaxed text-base">{res.locality}</p>
+                                <h2 className="text-gray-900 title-font text-lg font-medium mb-2">{res.foodDescription}</h2>
+                                <Link className="leading-relaxed text-base" to={res.mapAPI}><p>{res.locality}</p></Link>
                             </div>
                         </div>
                     ))
