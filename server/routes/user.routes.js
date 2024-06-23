@@ -6,8 +6,7 @@ import {
   logoutUser,
   refreshAccessToken,
   registerUser,
-  // registerComplaint,
-  // getComplaints,
+  getPaymentDetails,
   makePayment,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -27,10 +26,8 @@ router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 
-// router.route("/register-complaint").post(registerComplaint);
+router.route("/get-payment-details").get(getPaymentDetails);
 
-// router.route("/get-complaint").get(getComplaints);
-
-router.route("/create-checkout-session").get(makePayment);
+router.route("/create-checkout-session").post(makePayment);
 
 export default router;
