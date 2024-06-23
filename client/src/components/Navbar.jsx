@@ -1,10 +1,12 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import logo from "../assets/Logi.png"
 
 const Navbar = () => {
   const navbarRef = useRef(null);
   const { user, logout } = useContext(AuthContext);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -19,6 +21,15 @@ const Navbar = () => {
     }
   };
 
+  const handleUserImageClick = () => {
+    setShowDropdown(true);
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 3000); // Hide dropdown after 3 seconds
+  };
+
+  //console.log("User detial: ", user);
+
   // Add event listener for scroll
   window.addEventListener("scroll", handleScroll);
 
@@ -30,12 +41,11 @@ const Navbar = () => {
       >
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
-            href="https://flowbite.com/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8"
+              src={logo}
+              className="h-10 border border-black rounded-full"
               alt="Flowbite Logo"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap">
@@ -134,16 +144,61 @@ const Navbar = () => {
             {user ? (
               <div className="flex items-center space-x-3">
                 <img
+                  onClick={handleUserImageClick}
                   className="w-8 h-8 rounded-full"
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
                   alt="user photo"
                 />
-                <button
+                {/* Drop down */}
+                {showDropdown && (
+                  <div
+                    className="absolute top-16 right-[150px] z-50 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                    id="user-dropdown"
+                  >
+                    <div className="px-4 py-3">
+                      <span className="block text-sm text-gray-900 dark:text-white">
+                        {user.fullname}
+                      </span>
+                      <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
+                        {user.email}
+                      </span>
+                    </div>
+                    <ul className="py-2" aria-labelledby="user-menu-button">
+                      <li>
+                        <Link to="/admin/dashboard">
+                        <span
+                          
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        >
+                          Dashboard
+                        </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        >
+                          Settings
+                        </a>
+                      </li>
+                      <li>
+                        <span
+                          onClick={logout}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        >
+                          Sign out
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+                {/* <button
                   onClick={logout}
                   className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900"
                 >
                   Logout
-                </button>
+                </button> */}
               </div>
             ) : (
               <Link to="/signin">
@@ -180,15 +235,7 @@ const Navbar = () => {
                   href="#"
                   className="block py-2 px-3 text-[#1D1818] rounded md:bg-transparent md:p-0"
                 >
-                  Services
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-[#1D1818] rounded md:bg-transparent md:p-0"
-                >
-                  Pricing
+                  Search Nearby Restaurants
                 </a>
               </li>
               <li>

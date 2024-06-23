@@ -24,6 +24,19 @@ const generateAccessAndRefreshTokens = async (userId) => {
   }
 };
 
+const getAllUser = async(req, res) => {
+  try {
+    const user = await User.find();
+    //console.log(user);
+    res.status(200).json({ user });
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Something went wrong while fetching all users"
+    );
+  }
+}
+
 const registerUser = asyncHandler(async (req, res) => {
   // get user details from frontend
   // validation - not empty
@@ -32,11 +45,11 @@ const registerUser = asyncHandler(async (req, res) => {
   // remove password and refresh token field from response
   // check for user creation
   // return res
-  const { email, password, fullname, username } = req.body;
+  const { email, password, fullname, username, role } = req.body;
 
   // check if any field is empty
   if (
-    [email, fullname, username, password].some((field) => field?.trim() === "")
+    [email, fullname, username, password, role].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
@@ -52,6 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     fullname,
     password,
+    role,
     username: username.toLowerCase(),
   });
 
@@ -306,4 +320,5 @@ export {
   refreshAccessToken,
   registerUser,
   makePayment,
+  getAllUser
 };

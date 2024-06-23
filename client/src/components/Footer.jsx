@@ -80,9 +80,7 @@ const Footer = () => {
                 MealMates Company
               </h6>
               <p>
-                Here you can use rows and columns to organize your footer
-                content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                elit.
+              Join us in our mission to make sure no student has to study on an empty stomach.
               </p>
             </div>
 
@@ -91,16 +89,16 @@ const Footer = () => {
                 Products
               </h6>
               <p className="mb-4">
-                <a href="#!">Angular</a>
+                <a href="#!">A</a>
               </p>
               <p className="mb-4">
-                <a href="#!">React</a>
+                <a href="#!">B</a>
               </p>
               <p className="mb-4">
-                <a href="#!">Vue</a>
+                <a href="#!">C</a>
               </p>
               <p>
-                <a href="#!">Laravel</a>
+                <a href="#!">D</a>
               </p>
             </div>
 
@@ -189,7 +187,7 @@ const Footer = () => {
         </div>
         <div className="bg-black/5 p-6 text-center">
           <span>© 2024 Copyright:</span>
-          <a className="font-semibold" href="https://tw-elements.com/">
+          <a className="font-semibold">
             MealMates Company
           </a>
         </div>
