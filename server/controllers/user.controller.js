@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
-// import { Complaint } from "../models/complaint.model.js";
+import { Payment } from "../db/payment.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { Vonage } from "@vonage/server-sdk";
 import Stripe from "stripe";
 
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -227,69 +226,28 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "User fetched successfully"));
 });
 
-// register complaint
-// const registerComplaint = asyncHandler(async (req, res) => {
-//   const { locality, date, issueType, issueDescription, mapAPI, mobileNo } =
-//     req.body;
-//   const vonage = new Vonage({
-//     apiKey: process.env.VONAGE_API_KEY,
-//     apiSecret: process.env.VONAGE_SECRET_KEY,
-//   });
-//   const from = "Bronx Watch Community";
-//   const to = `${mobileNo}`;
-//   const text = "Your complaint is registered successfully!!";
-//   await vonage.sms
-//     .send({ to, from, text })
-//     .then((resp) => {
-//       console.log("Message sent successfully");
-//       console.log(resp);
-//     })
-//     .catch((err) => {
-//       console.log("There was an error sending the messages.");
-//       console.error(err);
-//     });
-//   const newComplaint = new Complaint({
-//     locality,
-//     date,
-//     issueType,
-//     issueDescription,
-//     mapAPI,
-//   });
-//   console.log("Request body: ", req.body);
-//   const complaintData = await newComplaint.save();
-//   console.log("Complaint Data: ", complaintData);
-//   return res.status(200).json({
-//     success: true,
-//     msg: "Complaint Registered successfully!",
-//     complaintData,
-//   });
-// });
-
-// const getComplaints = asyncHandler(async (req, res) => {
-//   try {
-//     const complaintsList = await Complaint.find();
-//     console.log(
-//       "Here are the list of complaints registered by the residents: ",
-//       complaintsList
-//     );
-//     return res.status(200).json({
-//       success: true,
-//       msg: "List of complaints registered by the residents",
-//       complaintsList,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching complaints: ", error);
-//     return res.status(500).json({
-//       success: false,
-//       msg: "Error fetching complaints",
-//       error: error.message,
-//     });
-//   }
-// });
+const getPaymentDetails = asyncHandler(async (req, res) => {
+  try {
+    const paymentList = await Payment.find();
+    console.log("Payment Details given by the user: ", paymentList);
+    return res.status(200).json({
+      success: true,
+      msg: "Payment Details given by the user",
+      paymentList,
+    });
+  } catch (error) {
+    console.error("Error fetching details: ", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Error fetching details",
+      error: error.message,
+    });
+  }
+});
 
 const makePayment = async (req, res) => {
   const stripe = new Stripe(process.env.STRIPE_SECONDARY_KEY);
-  const { amount } = req.body;
+  const { name, email, amount, message } = req.body;
 
   if (!amount) {
     return res.status(400).json({
@@ -315,11 +273,24 @@ const makePayment = async (req, res) => {
           quantity: 1,
         },
       ],
+      customer_email: email,
+      metadata: {
+        name: name,
+        message: message,
+      },
       success_url: "http://localhost:5173/success",
       cancel_url: "http://localhost:5173/cancel",
     });
-
-    res.json({ id: session.id });
+    const newPayment = new Payment({
+      name,
+      email,
+      amount,
+      message,
+    });
+    console.log("Request body: ", req.body);
+    const newPaymentData = await newPayment.save();
+    console.log("Payment Details: ", newPaymentData);
+    res.json({ id: session.id, success: true });
   } catch (error) {
     console.error("Error creating checkout session:", error);
     res.status(500).json({ error: "Error creating checkout session." });
@@ -328,12 +299,11 @@ const makePayment = async (req, res) => {
 
 export {
   changeCurrentPassword,
-  // getComplaints,
+  getPaymentDetails,
   getCurrentUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
-  // registerComplaint,
   registerUser,
   makePayment,
 };
