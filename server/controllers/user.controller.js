@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
-import { Complaint } from "../models/complaint.model.js";
+// import { Complaint } from "../models/complaint.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Vonage } from "@vonage/server-sdk";
+import Stripe from "stripe";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -84,7 +85,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({
-    email
+    email,
   });
 
   if (!user) {
@@ -108,7 +109,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: 'None',
+    sameSite: "None",
   };
 
   return res
@@ -227,72 +228,112 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 // register complaint
-const registerComplaint = asyncHandler(async (req, res) => {
-  const { locality, date, issueType, issueDescription, mapAPI, mobileNo } =
-    req.body;
-  const vonage = new Vonage({
-    apiKey: process.env.VONAGE_API_KEY,
-    apiSecret: process.env.VONAGE_SECRET_KEY,
-  });
-  const from = "Bronx Watch Community";
-  const to = `${mobileNo}`;
-  const text = "Your complaint is registered successfully!!";
-  await vonage.sms
-    .send({ to, from, text })
-    .then((resp) => {
-      console.log("Message sent successfully");
-      console.log(resp);
-    })
-    .catch((err) => {
-      console.log("There was an error sending the messages.");
-      console.error(err);
-    });
-  const newComplaint = new Complaint({
-    locality,
-    date,
-    issueType,
-    issueDescription,
-    mapAPI,
-  });
-  console.log("Request body: ", req.body);
-  const complaintData = await newComplaint.save();
-  console.log("Complaint Data: ", complaintData);
-  return res.status(200).json({
-    success: true,
-    msg: "Complaint Registered successfully!",
-    complaintData,
-  });
-});
+// const registerComplaint = asyncHandler(async (req, res) => {
+//   const { locality, date, issueType, issueDescription, mapAPI, mobileNo } =
+//     req.body;
+//   const vonage = new Vonage({
+//     apiKey: process.env.VONAGE_API_KEY,
+//     apiSecret: process.env.VONAGE_SECRET_KEY,
+//   });
+//   const from = "Bronx Watch Community";
+//   const to = `${mobileNo}`;
+//   const text = "Your complaint is registered successfully!!";
+//   await vonage.sms
+//     .send({ to, from, text })
+//     .then((resp) => {
+//       console.log("Message sent successfully");
+//       console.log(resp);
+//     })
+//     .catch((err) => {
+//       console.log("There was an error sending the messages.");
+//       console.error(err);
+//     });
+//   const newComplaint = new Complaint({
+//     locality,
+//     date,
+//     issueType,
+//     issueDescription,
+//     mapAPI,
+//   });
+//   console.log("Request body: ", req.body);
+//   const complaintData = await newComplaint.save();
+//   console.log("Complaint Data: ", complaintData);
+//   return res.status(200).json({
+//     success: true,
+//     msg: "Complaint Registered successfully!",
+//     complaintData,
+//   });
+// });
 
-const getComplaints = asyncHandler(async (req, res) => {
-  try {
-    const complaintsList = await Complaint.find();
-    console.log(
-      "Here are the list of complaints registered by the residents: ",
-      complaintsList
-    );
-    return res.status(200).json({
-      success: true,
-      msg: "List of complaints registered by the residents",
-      complaintsList,
-    });
-  } catch (error) {
-    console.error("Error fetching complaints: ", error);
-    return res.status(500).json({
+// const getComplaints = asyncHandler(async (req, res) => {
+//   try {
+//     const complaintsList = await Complaint.find();
+//     console.log(
+//       "Here are the list of complaints registered by the residents: ",
+//       complaintsList
+//     );
+//     return res.status(200).json({
+//       success: true,
+//       msg: "List of complaints registered by the residents",
+//       complaintsList,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching complaints: ", error);
+//     return res.status(500).json({
+//       success: false,
+//       msg: "Error fetching complaints",
+//       error: error.message,
+//     });
+//   }
+// });
+
+const makePayment = async (req, res) => {
+  const stripe = new Stripe(process.env.STRIPE_SECONDARY_KEY);
+  const { amount } = req.body;
+
+  if (!amount) {
+    return res.status(400).json({
       success: false,
-      msg: "Error fetching complaints",
-      error: error.message,
+      msg: "Amount is required",
     });
   }
-});
+
+  try {
+    // Create a Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: "Custom Payment",
+            },
+            unit_amount: amount,
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/cancel",
+    });
+
+    res.json({ id: session.id });
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    res.status(500).json({ error: "Error creating checkout session." });
+  }
+};
 
 export {
   changeCurrentPassword,
-  getComplaints,
+  // getComplaints,
   getCurrentUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
-  registerComplaint,
+  // registerComplaint,
   registerUser,
+  makePayment,
 };
