@@ -31,8 +31,7 @@ const Map = () => {
         url: "https://google-api31.p.rapidapi.com/map",
         headers: {
           "content-type": "application/json",
-          "X-RapidAPI-Key":
-            "dc66c7ea2emsha6c7a2e618149d4p17da80jsn5c1e1cd8cb27",
+          "X-RapidAPI-Key":import.meta.env.VITE_RAPID_API_KEY,
           "X-RapidAPI-Host": "google-api31.p.rapidapi.com",
         },
         data: {
