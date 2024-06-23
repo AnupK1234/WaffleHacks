@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import RegisterFoodWastage from './pages/RegisterFoodWastage'
 import ListOfFoodComplaints from './pages/ListOfFoodComplaints'
 import Community_Forum from "./pages/CommunityForum";
+import Map from "./pages/Map/Map";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/contactus" element={<Contact />} />
           <Route path="/success" element={<Success />} />
           <Route path="/cancel" element={<Cancel />} />
+          <Route path="/map" element={<Map />} />
         </Routes>
       </AuthProvider>
     </>
